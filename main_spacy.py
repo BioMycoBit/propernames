@@ -1,6 +1,8 @@
 """
 Spacy nlp
 """
+
+from main import writecsv
 import csv
 import os
 import spacy
@@ -12,54 +14,39 @@ outputfolder = os.path.abspath('data/output')
 # Load English tokenizer, tagger, parser, NER and word vectors
 nlp = spacy.load("en_core_web_sm")
 
-
+# Header
+header = ('entitylbl', 'entitytxt')
 
 
 def main():
+    entities = {}
 
     # load csv
     with open(exfile, newline='') as csvfile:
-        csvreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        next(csvreader)
+        csvreader = csv.DictReader(csvfile)
+
+        count = 0
 
         for row in csvreader:
 
-            print(row[3])
-            breakpoint()
-
-            doc = nlp(row[3])
-
-
+            doc = nlp(row['transcript'])
 
             # Analyze syntax
-            print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-            print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
+            # print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
+            # print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
 
             # Find named entities, phrases and concepts
             for entity in doc.ents:
-                print(entity.text, entity.label_)
+                entities.update({count: {'label': entity.label_,
+                                 'txt': entity.text, }})
+                count += 1
 
-            # print(', '.join(row))
+
+    outputfile = exfile.replace('.csv', '_entities.csv')
+    print(f'outputfile: {outputfile}')
 
 
-    breakpoint()
-
-    # Process whole documents
-    text = ("When Sebastian Thrun started working on self-driving cars at "
-            "Google in 2007, few people outside of the company took him "
-            "seriously. “I can tell you very senior CEOs of major American "
-            "car companies would shake my hand and turn away because I wasn’t "
-            "worth talking to,” said Thrun, in an interview with Recode earlier "
-            "this week.")
-    doc = nlp(text)
-
-    # Analyze syntax
-    print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-    print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
-
-    # Find named entities, phrases and concepts
-    for entity in doc.ents:
-        print(entity.text, entity.label_)
+    writecsv(file=outputfile, header=header, linesdict=entities)
 
 
 if __name__ == '__main__':

@@ -8,6 +8,7 @@ import os
 exfile = os.path.abspath('data/input/Ep 33 Edburg_otter.ai.txt')
 outputfolder = os.path.abspath('data/output')
 
+
 def parseauthorline(line):
     """ return line dict for author """
 
@@ -47,6 +48,23 @@ def parseline(line):
         return linedict
 
 
+def writecsv(*, file, header, linesdict):
+    """ write csv """
+
+    with open(file, 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile, delimiter=',')
+
+        # write csvheader
+        csvwriter.writerow(header)
+
+        for linedict in linesdict.values():
+
+            # print(f'linedict: {linedict}')
+            # breakpoint()
+
+            csvwriter.writerow(linedict.values())
+
+
 def main():
     linesdict = {}
 
@@ -58,6 +76,7 @@ def main():
         authors = []
         transcripts = []
         episode = {'episode': os.path.basename(exfile)}
+        header = ('type', 'author', 'time', 'transcript', 'episode')
 
         for idx, line in enumerate(lines, 1):
             if len(line) > 1:
@@ -73,33 +92,8 @@ def main():
             linesdict.update({i: newdict})
 
     # export to csv
-    print(f'exfile: {exfile}')
-    outputfile = os.path.join(outputfolder,os.path.basename(exfile).replace(".txt", ".csv"))
-
-    with open(outputfile, 'w', newline='') as csvfile:
-
-        csvwriter = csv.writer(csvfile, delimiter=',')
-
-        # csvwriter = csv.writer(csvfile, delimiter=' ',
-        #                         quoting=csv.QUOTE_MINIMAL)
-
-        csvwriter.writerow(('episode', 'type', 'author', 'time', 'transcript'))
-
-        for linedict in linesdict.values():
-
-            print(linedict)
-            # breakpoint()
-
-
-            # #
-            # print(f'linesdict.values(): {linesdict.values()}')
-            csvwriter.writerow((linedict['episode'],
-                                linedict['type'],
-                                linedict['author'],
-                                linedict['time'],
-                                linedict['transcript'].strip("\n")))
-
-
+    outputfile = os.path.join(outputfolder, os.path.basename(exfile).replace(".txt", ".csv"))
+    writecsv(file=outputfile, header=header, linesdict=linesdict)
 
 
 if __name__ == '__main__':
