@@ -2,7 +2,7 @@
 Spacy nlp
 """
 
-from main import writecsv
+from main_01_transcribe import writecsv
 import csv
 import os
 import spacy
@@ -21,6 +21,8 @@ header = ('episode', 'entitylbl', 'entitytxt')
 def main():
 
     files = [os.path.join(inputfolder, file) for file in os.listdir(inputfolder)]
+
+    files = files[-1:]
 
     for file in files:
         entities = {}

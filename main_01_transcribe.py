@@ -94,11 +94,18 @@ def main():
                         elif linedict['type'] == 'author':
                             authors.append(linedict)
 
-            for i in range(len(authors)):
+            # range (0:lowest number (authors or transcripts -- should be same)
+            for i in range(min(len(authors), len(transcripts))):
 
-                # print(f'len(authors): {len(authors)} len(transcripts): {len(transcripts)}')
                 newdict = {**authors[i], **transcripts[i], **episode}
                 linesdict.update({i: newdict})
+
+            # author qc
+            author_qc = [author['author'] for author in authors if author['author'] == 'Unknown']
+
+            if len(author_qc) > 0:
+                print(f'{"":>5} Unknown Author Found [Occurrences: {len(author_qc)}]')
+
 
         # export to csv
         outputfile = os.path.join(outputfolder, os.path.basename(file).replace(".txt", ".csv"))
