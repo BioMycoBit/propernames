@@ -16,11 +16,18 @@ def main():
     files = [os.path.join(inputfolder, file) for file in os.listdir(inputfolder)]
 
     dfs = []
-
     # build list of pandas dataframes
     for file in files:
         df = pd.read_csv(file)
         dfs.append(df)
+
+    # dfs = {}
+    #
+    # # build list of pandas dataframes [TODO: list -> dict]
+    # for idx, file in enumerate(files):
+    #     df = pd.read_csv(file)
+    #     dfs.update({idx: df})
+
 
     # combine dataframes
     df_combined = pd.concat(dfs)
