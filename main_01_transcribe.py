@@ -8,6 +8,9 @@ import os
 inputfolder = os.path.abspath('data/input/transcripts')
 outputfolder = os.path.abspath('data/output/episodes')
 
+# Header
+header = ('type', 'author', 'time', 'transcript', 'episode', 'episodeno')
+
 
 def parseauthorline(line):
     """ return line dict for author """
@@ -58,7 +61,6 @@ def writecsv(*, file, header, linesdict):
         csvwriter.writerow(header)
 
         for linedict in linesdict.values():
-
             # print(f'linedict: {linedict}')
             # breakpoint()
 
@@ -81,8 +83,17 @@ def main():
 
             authors = []
             transcripts = []
-            episode = {'episode': os.path.basename(file)}
-            header = ('type', 'author', 'time', 'transcript', 'episode')
+
+            # episode = {'episode': os.path.basename(file)}
+
+            episodetxt = os.path.basename(file)
+            episodeno = episodetxt[:episodetxt.find("_")]
+
+            print(f'episodetxt: {episodetxt} episodeno: {episodeno}')
+            # breakpoint()
+
+            episode = {'episode': episodetxt,
+                       'episodeno': episodeno}
 
             for idx, line in enumerate(lines, 1):
                 if len(line) > 1:
@@ -96,7 +107,6 @@ def main():
 
             # range (0:lowest number (authors or transcripts -- should be same)
             for i in range(min(len(authors), len(transcripts))):
-
                 newdict = {**authors[i], **transcripts[i], **episode}
                 linesdict.update({i: newdict})
 
@@ -105,7 +115,6 @@ def main():
 
             if len(author_qc) > 0:
                 print(f'{"":>5} Unknown Author Found [Occurrences: {len(author_qc)}]')
-
 
         # export to csv
         outputfile = os.path.join(outputfolder, os.path.basename(file).replace(".txt", ".csv"))

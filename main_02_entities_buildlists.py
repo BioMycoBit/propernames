@@ -15,7 +15,7 @@ outputfolder = os.path.abspath('data/output/episodes_entities')
 nlp = spacy.load("en_core_web_sm")
 
 # Header
-header = ('episode', 'entitylbl', 'entitytxt', 'time')
+header = ('episode', 'episodeno', 'entitylbl', 'entitytxt', 'time')
 
 
 def main():
@@ -25,8 +25,6 @@ def main():
     for file in files:
         entities = {}
 
-        episode = os.path.basename(file)
-
         # load csv
         with open(file, newline='') as csvfile:
             csvreader = csv.DictReader(csvfile)
@@ -34,6 +32,9 @@ def main():
             count = 0
 
             for row in csvreader:
+
+                # print(f'row: {row}')
+                # breakpoint()
 
                 doc = nlp(row['transcript'])
 
@@ -46,7 +47,8 @@ def main():
 
                     # print(f'{type(entity)} {entity.text} {entity.label_}')
 
-                    entities.update({count: {'episode': episode,
+                    entities.update({count: {'episode': row["episode"],
+                                             'episodeno': row["episodeno"],
                                              'label': entity.label_,
                                              'txt': entity.text,
                                              'time': row["time"]}})

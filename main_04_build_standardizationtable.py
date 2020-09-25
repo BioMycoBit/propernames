@@ -1,5 +1,5 @@
 """
-Build Entities Combined List
+Build Entities Standardization Table
 """
 
 from main_01_transcribe import writecsv
