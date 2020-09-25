@@ -61,8 +61,9 @@ def writecsv(*, file, header, linesdict):
         csvwriter.writerow(header)
 
         for linedict in linesdict.values():
-            # print(f'linedict: {linedict}')
-            # breakpoint()
+
+            # qc
+            # print(f'{file} {linedict.values()}')
 
             csvwriter.writerow(linedict.values())
 
@@ -84,18 +85,14 @@ def main():
             authors = []
             transcripts = []
 
-            # episode = {'episode': os.path.basename(file)}
-
             episodetxt = os.path.basename(file)
             episodeno = episodetxt[:episodetxt.find("_")]
-
-            print(f'episodetxt: {episodetxt} episodeno: {episodeno}')
-            # breakpoint()
 
             episode = {'episode': episodetxt,
                        'episodeno': episodeno}
 
             for idx, line in enumerate(lines, 1):
+                # if line not blank line then either a transcript or author line
                 if len(line) > 1:
                     linedict = parseline(line)
 
@@ -105,7 +102,7 @@ def main():
                         elif linedict['type'] == 'author':
                             authors.append(linedict)
 
-            # range (0:lowest number (authors or transcripts -- should be same)
+            # range (0:lowest number (authors or transcripts -- not always same)
             for i in range(min(len(authors), len(transcripts))):
                 newdict = {**authors[i], **transcripts[i], **episode}
                 linesdict.update({i: newdict})
