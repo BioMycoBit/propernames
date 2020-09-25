@@ -15,14 +15,12 @@ outputfolder = os.path.abspath('data/output/episodes_entities')
 nlp = spacy.load("en_core_web_sm")
 
 # Header
-header = ('episode', 'entitylbl', 'entitytxt')
+header = ('episode', 'entitylbl', 'entitytxt', 'time')
 
 
 def main():
 
     files = [os.path.join(inputfolder, file) for file in os.listdir(inputfolder)]
-
-    files = files[-1:]
 
     for file in files:
         entities = {}
@@ -45,9 +43,13 @@ def main():
 
                 # Find named entities, phrases and concepts
                 for entity in doc.ents:
+
+                    # print(f'{type(entity)} {entity.text} {entity.label_}')
+
                     entities.update({count: {'episode': episode,
                                              'label': entity.label_,
-                                             'txt': entity.text, }})
+                                             'txt': entity.text,
+                                             'time': row["time"]}})
                     count += 1
 
 

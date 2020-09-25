@@ -5,7 +5,7 @@ import csv
 import os
 
 # Example File
-inputfolder = os.path.abspath('data/input')
+inputfolder = os.path.abspath('data/input/transcripts')
 outputfolder = os.path.abspath('data/output/episodes')
 
 

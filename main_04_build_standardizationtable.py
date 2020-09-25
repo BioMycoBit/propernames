@@ -10,7 +10,7 @@ import collections
 
 # Example File
 inputfolder = os.path.abspath('data/output/episodes_entities')
-outputfile = os.path.abspath('data/output/entities_master.csv')
+outputfile = os.path.abspath('data/output/episodes_entities_standardizationtable.csv')
 
 # Header
 header = ('entitytype', 'entitytxt', 'entityfinaltxt', 'occurrences')
